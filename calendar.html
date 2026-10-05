@@ -180,6 +180,7 @@
   .division-title.open .chev{transform:rotate(90deg);}
   .division-title .chip-dot{width:9px;height:9px;border-radius:2px;flex:none;}
   .division-title .name{flex:1;}
+  .division-title .division-progress{font-size:10px;font-weight:900;padding:3px 7px;border-radius:999px;background:var(--blue-light);white-space:nowrap;}
   .division-title .icons,.section-title .icons,.task-row-label .icons{display:flex;gap:3px;align-items:center;}
   .section-block{padding-bottom:4px;}
   .section-title{display:flex;align-items:center;gap:8px;padding:5px 10px 5px 8px;font-size:11.5px;font-weight:700;color:var(--text-soft);}
@@ -512,6 +513,8 @@ const MONTHS = ["يناير","فبراير","مارس","أبريل","مايو","
 const MONTHS_EN = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
 const PALETTE = ["#1C77B0","#C2410C","#7C3AED","#047857","#0E7490","#B91C1C","#92400E","#4338CA","#0F766E","#BE185D"];
 const STORAGE_KEY = "hr_annual_calendar_v4";
+const CENTRAL_API_URL = "https://script.google.com/macros/s/AKfycbzvKliow5p_cyTTpFIAaFVH7q2IpC3Iv_pHEq7YGZGJZ2Tv0iIA_IjVcCy_8UKCioFk/exec";
+const CENTRAL_API_KEY = "HR Annual Calendar";
 const STATUS_LABEL = {planned:"مخطط", ongoing:"جار", completed:"مكتمل", delayed:"متأخر"};
 const STATUS_COLOR = {planned:"#6B7280", ongoing:"#16794F", completed:"#1C77B0", delayed:"#B91C1C"};
 const DEFAULT_LOGO = "data:image/png;base64,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";
@@ -565,6 +568,38 @@ const DIVISION_ORDER = ["دائرة تخطيط الموارد البشرية","�
 
 let STORE = { divisions:[], users:[], meetings:[], messages:[], themes:[], logoDataUrl:DEFAULT_LOGO };
 
+function normalizeText(v){ return String(v||'').trim().replace(/\s+/g,' ').toLowerCase(); }
+function mergeDuplicateDivisions(){
+  if(!Array.isArray(STORE.divisions)) STORE.divisions=[];
+  const byName=new Map(), out=[];
+  STORE.divisions.forEach(div=>{
+    const key=normalizeText(div.name);
+    if(!key){ out.push(div); return; }
+    let target=byName.get(key);
+    if(!target){
+      target=div;
+      target.sections=Array.isArray(target.sections)?target.sections:[];
+      byName.set(key,target); out.push(target);
+      return;
+    }
+    // دمج الدائرة المكررة داخل الدائرة الأصلية بدل عرضها مرتين
+    if(!target.color && div.color) target.color=div.color;
+    if(!Array.isArray(target.sections)) target.sections=[];
+    (Array.isArray(div.sections)?div.sections:[]).forEach(sec=>{
+      const skey=normalizeText(sec.name);
+      let tsec=target.sections.find(x=>normalizeText(x.name)===skey);
+      if(!tsec){
+        tsec={...sec,tasks:Array.isArray(sec.tasks)?sec.tasks.slice():[]};
+        target.sections.push(tsec);
+      }else{
+        const existing=new Set((tsec.tasks||[]).map(t=>String(t.id)));
+        (sec.tasks||[]).forEach(t=>{ if(!existing.has(String(t.id))){tsec.tasks.push(t);existing.add(String(t.id));} });
+      }
+    });
+  });
+  STORE.divisions=out;
+}
+
 function loadStore(){
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -585,6 +620,7 @@ function loadStore(){
         if(ib===-1) return -1;
         return ia-ib;
       });
+      mergeDuplicateDivisions();
       return;
     }
   }catch(e){}
@@ -666,62 +702,17 @@ function openModal({title, nameValue="", colorValue=null, startValue=null, endVa
 }
 
 function openUsersModal(){
-  if(!currentUser || currentUser.role!=='مسؤول'){ toast('إدارة المستخدمين متاحة للمسؤول فقط'); return; }
-  function draw(){
-    modalBox.innerHTML = `<h3>👥 المستخدمون</h3>
-      <div id="usersList">${STORE.users.length? STORE.users.map(u=>`
-        <div class="user-row">
-          <span class="nm">${u.name}<br><small style="color:var(--text-soft);font-weight:400;">@${u.username||'—'}</small></span>
-          <select class="role-select" data-id="${u.id}" ${u.id===currentUser.id?'disabled':''}>
-            <option value="مسؤول" ${u.role==='مسؤول'?'selected':''}>مسؤول (تحكم كامل)</option>
-            <option value="محرر" ${u.role==='محرر'||!u.role?'selected':''}>محرر (إضافة وتعديل)</option>
-            <option value="مشاهد" ${u.role==='مشاهد'?'selected':''}>مشاهد (عرض فقط)</option>
-          </select>
-          <button class="icon-btn" data-reset="${u.id}" title="إعادة تعيين كلمة المرور">🔑</button>
-          <button class="icon-btn del" data-id="${u.id}" title="حذف" ${u.id===currentUser.id?'disabled':''}>✕</button>
-        </div>
-      `).join('') : '<div class="empty-hint">لا يوجد مستخدمون بعد</div>'}</div>
-      <div class="add-user-row" style="flex-direction:column;align-items:stretch;gap:7px;">
-        <input type="text" id="newUserName" placeholder="الاسم الكامل">
-        <input type="text" id="newUserUsername" placeholder="اسم المستخدم (بدون مسافات)">
-        <input type="password" id="newUserPass" placeholder="كلمة مرور مبدئية (8 أحرف فأكثر)">
-        <button class="pill filled" id="addUserBtn">＋ إضافة مستخدم</button>
-      </div>
-      <div class="modal-actions"><div></div><div class="right"><button class="pill muted" id="uClose">إغلاق</button></div></div>
-      <p style="font-size:11px;color:var(--text-soft);margin-top:10px;line-height:1.7;">
-        <b>ملاحظة أمنية:</b> هذا دخول حقيقي باسم مستخدم وكلمة مرور (مشفّرة بـ SHA-256) مخزّنة في متصفح كل جهاز يُستخدم عليه هذا الملف.
-        لأمان بمستوى مؤسسي رسمي (خادم مركزي، صلاحيات دقيقة، سجل تدقيق) يُنصح بربط هذا لاحقًا بخادم حقيقي بدل التخزين المحلي.
-      </p>`;
-    modalBox.querySelectorAll('.icon-btn.del').forEach(b=>{
-      b.onclick = ()=>{ if(b.disabled) return; if(confirm('حذف هذا المستخدم؟')){ STORE.users = STORE.users.filter(u=>u.id!==b.dataset.id); saveStore(); draw(); toast('تم حذف المستخدم'); } };
-    });
-    modalBox.querySelectorAll('[data-reset]').forEach(b=>{
-      b.onclick = async ()=>{
-        const np = prompt('أدخل كلمة المرور الجديدة (8 أحرف على الأقل):');
-        if(!np) return;
-        if(np.length<8){ alert('كلمة المرور قصيرة جدًا'); return; }
-        const u = STORE.users.find(x=>x.id===b.dataset.reset);
-        u.passHash = await sha256(np); saveStore(); toast('تم تغيير كلمة المرور بنجاح');
-      };
-    });
-    modalBox.querySelectorAll('.role-select').forEach(sel=>{
-      sel.onchange = ()=>{ if(sel.disabled) return; const u = STORE.users.find(x=>x.id===sel.dataset.id); if(u){ u.role = sel.value; saveStore(); toast('تم تحديث الصلاحية'); } };
-    });
-    document.getElementById('addUserBtn').onclick = async ()=>{
-      const name = document.getElementById('newUserName').value.trim();
-      const username = document.getElementById('newUserUsername').value.trim().toLowerCase();
-      const pass = document.getElementById('newUserPass').value;
-      if(!name || !username || !pass){ alert('الرجاء تعبئة جميع الحقول'); return; }
-      if(/\s/.test(username)){ alert('اسم المستخدم يجب ألا يحتوي على مسافات'); return; }
-      if(pass.length<8){ alert('كلمة المرور يجب أن تكون 8 أحرف على الأقل'); return; }
-      if(STORE.users.some(u=>(u.username||'').toLowerCase()===username)){ alert('اسم المستخدم موجود مسبقًا'); return; }
-      STORE.users.push({id:uid(), name, username, passHash: await sha256(pass), role:'محرر'});
-      saveStore(); draw(); toast('تمت إضافة المستخدم: '+name);
-    };
-    document.getElementById('uClose').onclick = ()=>{ closeModal(); render(); };
+  if(!currentUser||currentUser.role!=='مسؤول'){toast('إدارة المستخدمين متاحة للمسؤول فقط');return;}
+  async function draw(){
+    try{await refreshCentralUsers();}catch(e){toast('تعذر تحميل المستخدمين: '+e.message);}
+    modalBox.innerHTML=`<h3>👥 المستخدمون المركزيون</h3><div id="usersList">${STORE.users.length?STORE.users.map(u=>`<div class="user-row"><span class="nm">${u.name}<br><small style="color:var(--text-soft);font-weight:400;">@${u.username||'—'}</small></span><select class="role-select" data-id="${u.id}" ${u.id===currentUser.id?'disabled':''}><option value="مسؤول" ${u.role==='مسؤول'?'selected':''}>مسؤول (تحكم كامل)</option><option value="محرر" ${u.role==='محرر'||!u.role?'selected':''}>محرر (إضافة وتعديل)</option><option value="مشاهد" ${u.role==='مشاهد'?'selected':''}>مشاهد (عرض فقط)</option></select><button class="icon-btn" data-reset="${u.id}" title="إعادة تعيين كلمة المرور">🔑</button><button class="icon-btn del" data-id="${u.id}" title="تعطيل المستخدم" ${u.id===currentUser.id?'disabled':''}>✕</button></div>`).join(''):'<div class="empty-hint">لا يوجد مستخدمون بعد</div>'}</div><div class="add-user-row" style="flex-direction:column;align-items:stretch;gap:7px;"><input type="text" id="newUserName" placeholder="الاسم الكامل"><input type="text" id="newUserUsername" placeholder="اسم المستخدم (بدون مسافات)"><input type="password" id="newUserPass" placeholder="كلمة مرور مبدئية (8 أحرف فأكثر)"><button class="pill filled" id="addUserBtn">＋ إضافة مستخدم مركزي</button></div><div class="modal-actions"><div></div><div class="right"><button class="pill muted" id="uClose">إغلاق</button></div></div><p style="font-size:11px;color:var(--text-soft);margin-top:10px;line-height:1.7;"><b>ملاحظة:</b> الحسابات وكلمات المرور المشفرة والصلاحيات محفوظة في Google Sheet، وليست في متصفح المستخدم. الجلسة فقط تُحفظ محليًا كرمز موقّع لمدة 30 يومًا.</p>`;
+    modalBox.querySelectorAll('.icon-btn.del').forEach(b=>b.onclick=async()=>{if(b.disabled||!confirm('تعطيل هذا المستخدم؟'))return;try{const r=await jsonp({action:'auth_delete',token:getSessionToken(),userId:b.dataset.id});if(!r.ok)throw new Error(r.error||'تعذر التعطيل');await draw();toast('تم تعطيل المستخدم');}catch(e){toast(e.message);}});
+    modalBox.querySelectorAll('[data-reset]').forEach(b=>b.onclick=async()=>{const np=prompt('أدخل كلمة المرور الجديدة (8 أحرف على الأقل):');if(!np)return;if(np.length<8){alert('كلمة المرور قصيرة جدًا');return;}try{const z=crypto.getRandomValues(new Uint8Array(16)),salt=Array.from(z).map(x=>x.toString(16).padStart(2,'0')).join(''),passwordHash=await sha256(np+salt),r=await jsonp({action:'auth_reset',token:getSessionToken(),userId:b.dataset.reset,passwordHash,passwordSalt:salt});if(!r.ok)throw new Error(r.error||'تعذر تغيير كلمة المرور');toast('تم تغيير كلمة المرور مركزيًا');}catch(e){toast(e.message);}});
+    modalBox.querySelectorAll('.role-select').forEach(sel=>sel.onchange=async()=>{if(sel.disabled)return;try{const r=await jsonp({action:'auth_role',token:getSessionToken(),userId:sel.dataset.id,role:sel.value});if(!r.ok)throw new Error(r.error||'تعذر تحديث الصلاحية');await draw();toast('تم تحديث الصلاحية مركزيًا');}catch(e){toast(e.message);await draw();}});
+    document.getElementById('addUserBtn').onclick=async()=>{const name=document.getElementById('newUserName').value.trim(),username=document.getElementById('newUserUsername').value.trim().toLowerCase(),pass=document.getElementById('newUserPass').value;if(!name||!username||!pass){alert('الرجاء تعبئة جميع الحقول');return;}if(/\s/.test(username)){alert('اسم المستخدم يجب ألا يحتوي على مسافات');return;}if(pass.length<8){alert('كلمة المرور يجب أن تكون 8 أحرف على الأقل');return;}try{const z=crypto.getRandomValues(new Uint8Array(16)),salt=Array.from(z).map(x=>x.toString(16).padStart(2,'0')).join(''),passwordHash=await sha256(pass+salt),r=await jsonp({action:'auth_create',token:getSessionToken(),name,username,passwordHash,passwordSalt:salt});if(!r.ok)throw new Error(r.error||'تعذر إضافة المستخدم');await draw();toast('تمت إضافة المستخدم مركزيًا: '+name);}catch(e){toast(e.message);}};
+    document.getElementById('uClose').onclick=()=>{closeModal();render();};
   }
-  draw();
-  overlay.classList.add('open');
+  draw();overlay.classList.add('open');
 }
 
 /* ---------------- SHARED THEMES (مواضيع مشتركة بين الدوائر) ---------------- */
@@ -1253,7 +1244,11 @@ function render(){
     const divTreeEl=document.createElement('div'); divTreeEl.className='division';
     const divTitle=document.createElement('div'); divTitle.className='division-title'+(isOpen?' open':'');
     const divExcluded = printExcluded.has('div_'+div.id);
-    divTitle.innerHTML = `${printSelectMode?`<input type="checkbox" class="print-check" data-pk="div_${div.id}" ${divExcluded?'':'checked'}>`:''}<span class="chev">▸</span><span class="chip-dot" style="background:${div.color}"></span><span class="name">${div.name}</span>
+    const divTasksForYear = [];
+    div.sections.forEach(sec=> (sec.tasks||[]).forEach(t=>{ if(mdFromIso(t.startIso).y===currentYear) divTasksForYear.push(t); }));
+    const divDoneForYear = divTasksForYear.filter(t=>(t.status||autoStatus(t))==='completed').length;
+    const divCompletionPct = divTasksForYear.length ? Math.round(divDoneForYear/divTasksForYear.length*100) : 0;
+    divTitle.innerHTML = `${printSelectMode?`<input type="checkbox" class="print-check" data-pk="div_${div.id}" ${divExcluded?'':'checked'}>`:''}<span class="chev">▸</span><span class="chip-dot" style="background:${div.color}"></span><span class="name">${div.name}</span><span class="division-progress">${divTasksForYear.length?`إنجاز ${divCompletionPct}%`:'لا أنشطة'}</span>
       <span class="icons">
         <button class="icon-btn" title="إضافة قسم">＋</button>
         <button class="icon-btn" title="تعديل الدائرة">✎</button>
@@ -1372,114 +1367,90 @@ function render(){
   }
 }
 
-/* ================== AUTH (real login system) ================== */
-const SESSION_KEY = STORAGE_KEY + '_session';
+/* ================== AUTH (central Google Sheet login) ================== */
+const SESSION_KEY = STORAGE_KEY + '_central_session';
 let currentUser = null;
 let printSelectMode = false;
 let printExcluded = new Set();
 
 async function sha256(str){
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
   return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
-function getSessionUser(){
-  try{
-    const raw = localStorage.getItem(SESSION_KEY);
-    if(!raw) return null;
-    const {userId} = JSON.parse(raw);
-    return STORE.users.find(u=>u.id===userId) || null;
-  }catch(e){ return null; }
+function getSessionToken(){ try{return localStorage.getItem(SESSION_KEY)||'';}catch(e){return '';} }
+function setSessionToken(t){try{localStorage.setItem(SESSION_KEY,t);}catch(e){}}
+function clearSession(){try{localStorage.removeItem(SESSION_KEY);}catch(e){}}
+function apiUrl(){
+  const saved=(typeof getSheetUrl==='function'?getSheetUrl():'')||'';
+  return saved || (CENTRAL_API_URL.indexOf('PASTE_YOUR_')===0?'':CENTRAL_API_URL);
 }
-function setSession(userId){ localStorage.setItem(SESSION_KEY, JSON.stringify({userId})); }
-function clearSession(){ localStorage.removeItem(SESSION_KEY); }
-
+function jsonp(params,timeoutMs=15000){
+  return new Promise((resolve,reject)=>{
+    const base=apiUrl(); if(!base)return reject(new Error('لم يتم ضبط رابط Google Apps Script Web App'));
+    const cb='__hrApiCb_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+    const script=document.createElement('script'); let timer;
+    const cleanup=()=>{clearTimeout(timer);try{delete window[cb];}catch(e){window[cb]=undefined;}script.remove();};
+    window[cb]=(data)=>{cleanup();resolve(data);};
+    const q=new URLSearchParams({...params,callback:cb,key:CENTRAL_API_KEY});
+    script.src=base+(base.includes('?')?'&':'?')+q.toString();
+    script.onerror=()=>{cleanup();reject(new Error('تعذر الاتصال بخادم Google Apps Script'));};
+    timer=setTimeout(()=>{cleanup();reject(new Error('انتهت مهلة الاتصال'));},timeoutMs);
+    document.head.appendChild(script);
+  });
+}
 function applyRolePermissions(){
-  const isViewer = currentUser && currentUser.role==='مشاهد';
-  const isAdmin = currentUser && currentUser.role==='مسؤول';
-  document.body.classList.toggle('role-viewer', !!isViewer);
-  document.getElementById('navUsers').style.display = isAdmin? '' : 'none';
-  document.getElementById('usersBtn').style.display = isAdmin? '' : 'none';
+  const isViewer=currentUser&&currentUser.role==='مشاهد', isAdmin=currentUser&&currentUser.role==='مسؤول';
+  document.body.classList.toggle('role-viewer',!!isViewer);
+  document.getElementById('navUsers').style.display=isAdmin?'':'';
+  document.getElementById('usersBtn').style.display=isAdmin?'':'';
 }
-
 function renderUserChip(){
-  const chip = document.getElementById('userChip');
-  if(!currentUser){ chip.innerHTML=''; return; }
-  chip.innerHTML = `<span>مرحبًا، <b>${currentUser.name}</b> <small>(${currentUser.role||'محرر'})</small></span><button id="logoutBtn">خروج</button>`;
-  document.getElementById('logoutBtn').onclick = ()=>{ clearSession(); location.reload(); };
+  const chip=document.getElementById('userChip'); if(!currentUser){chip.innerHTML='';return;}
+  chip.innerHTML=`<span>مرحبًا، <b>${currentUser.name}</b> <small>(${currentUser.role||'محرر'})</small></span><button id="logoutBtn">خروج</button>`;
+  document.getElementById('logoutBtn').onclick=()=>{clearSession();currentUser=null;location.reload();};
 }
-
 function showApp(){
-  document.body.classList.remove('not-authed');
-  document.getElementById('authOverlay').classList.add('hidden');
-  renderUserChip();
-  applyRolePermissions();
-  render();
-  requestNotifPermission();
-  checkDueReminders();
-  if(getSheetUrl()) pullFromSheet(true);
+  document.body.classList.remove('not-authed');document.getElementById('authOverlay').classList.add('hidden');
+  renderUserChip();applyRolePermissions();render();requestNotifPermission();checkDueReminders();
 }
-
-function boot(){
-  loadStore();
-  document.getElementById('authLogo').src = STORE.logoDataUrl || DEFAULT_LOGO;
-  if(STORE.users.length===0){
-    document.getElementById('authFirstRun').style.display='block';
-    document.getElementById('authLoginForm').style.display='none';
-    return;
-  }
-  document.getElementById('authFirstRun').style.display='none';
-  document.getElementById('authLoginForm').style.display='block';
-  const existing = getSessionUser();
-  if(existing){ currentUser = existing; showApp(); }
+async function authenticateExistingSession(){
+  const token=getSessionToken();if(!token)return false;
+  try{const r=await jsonp({action:'auth_validate',token});if(r&&r.ok&&r.user){currentUser=r.user;return true;}}catch(e){console.warn(e);}
+  clearSession();return false;
 }
-
-document.getElementById('firstRunBtn').addEventListener('click', async ()=>{
-  const name = document.getElementById('fName').value.trim();
-  const username = document.getElementById('fUsername').value.trim().toLowerCase();
-  const pass = document.getElementById('fPassword').value;
-  const pass2 = document.getElementById('fPassword2').value;
-  const err = document.getElementById('firstRunErr');
-  err.textContent='';
-  if(!name || !username || !pass){ err.textContent='الرجاء تعبئة جميع الحقول'; return; }
-  if(/\s/.test(username)){ err.textContent='اسم المستخدم يجب ألا يحتوي على مسافات'; return; }
-  if(pass.length<8){ err.textContent='كلمة المرور 8 أحرف على الأقل'; return; }
-  if(pass!==pass2){ err.textContent='كلمتا المرور غير متطابقتين'; return; }
-  const passHash = await sha256(pass);
-  const user = {id:uid(), name, username, passHash, role:'مسؤول'};
-  STORE.users.push(user);
-  saveStore();
-  currentUser = user;
-  setSession(user.id);
-  showApp();
-  toast('تم إنشاء الحساب بنجاح — مرحبًا بك');
+async function refreshCentralUsers(){
+  const r=await jsonp({action:'pull'}); if(!r||!r.ok)throw new Error(r&&r.error?r.error:'تعذر تحميل البيانات');
+  if(Array.isArray(r.users))STORE.users=r.users;if(Array.isArray(r.divisions)){STORE.divisions=r.divisions;mergeDuplicateDivisions();}
+  if(Array.isArray(r.themes))STORE.themes=r.themes;if(Array.isArray(r.meetings))STORE.meetings=r.meetings;if(Array.isArray(r.messages))STORE.messages=r.messages;
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(STORE));}catch(e){} return r;
+}
+async function boot(){
+  loadStore();document.getElementById('authLogo').src=STORE.logoDataUrl||DEFAULT_LOGO;
+  if(!apiUrl()){document.getElementById('authLoginForm').style.display='block';document.getElementById('loginErr').textContent='ضع رابط Web App في CENTRAL_API_URL داخل calendar.html.';return;}
+  try{await refreshCentralUsers();}catch(e){document.getElementById('authLoginForm').style.display='block';document.getElementById('loginErr').textContent='تعذر الاتصال بقاعدة البيانات: '+e.message;return;}
+  if(await authenticateExistingSession()){showApp();return;}
+  if(STORE.users.length===0){document.getElementById('authFirstRun').style.display='block';document.getElementById('authLoginForm').style.display='none';}
+  else{document.getElementById('authFirstRun').style.display='none';document.getElementById('authLoginForm').style.display='block';}
+}
+document.getElementById('firstRunBtn').addEventListener('click',async()=>{
+  const name=document.getElementById('fName').value.trim(),username=document.getElementById('fUsername').value.trim().toLowerCase(),pass=document.getElementById('fPassword').value,pass2=document.getElementById('fPassword2').value,err=document.getElementById('firstRunErr');err.textContent='';
+  if(!name||!username||!pass){err.textContent='الرجاء تعبئة جميع الحقول';return;}if(/\s/.test(username)){err.textContent='اسم المستخدم لا يحتوي على مسافات';return;}if(pass.length<8){err.textContent='كلمة المرور 8 أحرف على الأقل';return;}if(pass!==pass2){err.textContent='كلمتا المرور غير متطابقتين';return;}
+  try{const b=crypto.getRandomValues(new Uint8Array(16)),salt=Array.from(b).map(x=>x.toString(16).padStart(2,'0')).join(''),passwordHash=await sha256(pass+salt);const r=await jsonp({action:'auth_create',name,username,passwordHash,passwordSalt:salt});if(!r.ok)throw new Error(r.error||'تعذر إنشاء الحساب');setSessionToken(r.token);currentUser=r.user;await refreshCentralUsers();showApp();toast('تم إنشاء الحساب المركزي بنجاح');}catch(e){err.textContent=e.message;}
 });
-
-document.getElementById('loginBtn').addEventListener('click', async ()=>{
-  const username = document.getElementById('lUsername').value.trim().toLowerCase();
-  const pass = document.getElementById('lPassword').value;
-  const err = document.getElementById('loginErr');
-  err.textContent='';
-  const user = STORE.users.find(u=>(u.username||'').toLowerCase()===username);
-  const passHash = await sha256(pass||'');
-  if(!user || passHash !== user.passHash){ err.textContent='اسم المستخدم أو كلمة المرور غير صحيحة'; return; }
-  currentUser = user;
-  setSession(user.id);
-  showApp();
-  toast('تم تسجيل الدخول بنجاح');
+document.getElementById('loginBtn').addEventListener('click',async()=>{
+  const username=document.getElementById('lUsername').value.trim().toLowerCase(),pass=document.getElementById('lPassword').value,err=document.getElementById('loginErr');err.textContent='';
+  if(!username||!pass){err.textContent='أدخل اسم المستخدم وكلمة المرور';return;}
+  try{const ch=await jsonp({action:'auth_challenge',username});if(!ch.ok)throw new Error(ch.error||'بيانات الدخول غير صحيحة');const response=await sha256(ch.passwordHash+'|'+ch.nonce);const r=await jsonp({action:'auth_login',username,challengeId:ch.challengeId,response});if(!r.ok)throw new Error(r.error||'اسم المستخدم أو كلمة المرور غير صحيحة');setSessionToken(r.token);currentUser=r.user;await refreshCentralUsers();showApp();toast('تم تسجيل الدخول بنجاح');}catch(e){err.textContent=e.message;}
 });
-['lUsername','lPassword'].forEach(id=>{
-  document.getElementById(id).addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('loginBtn').click(); });
-});
-['fName','fUsername','fPassword','fPassword2'].forEach(id=>{
-  document.getElementById(id).addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('firstRunBtn').click(); });
-});
+['lUsername','lPassword'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('loginBtn').click();}));
+['fName','fUsername','fPassword','fPassword2'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('firstRunBtn').click();}));
 
 /* ================== GOOGLE SHEET SYNC (via Apps Script Web App) ================== */
 const SHEET_URL_KEY = STORAGE_KEY + '_sheet_url';
 const SHEET_APIKEY_KEY = STORAGE_KEY + '_sheet_apikey';
-function getSheetUrl(){ return localStorage.getItem(SHEET_URL_KEY) || ''; }
+function getSheetUrl(){ return localStorage.getItem(SHEET_URL_KEY) || (CENTRAL_API_URL.indexOf('PASTE_YOUR_')===0 ? '' : CENTRAL_API_URL); }
 function setSheetUrl(u){ localStorage.setItem(SHEET_URL_KEY, u); }
-function getSheetApiKey(){ return localStorage.getItem(SHEET_APIKEY_KEY) || ''; }
+function getSheetApiKey(){ return localStorage.getItem(SHEET_APIKEY_KEY) || CENTRAL_API_KEY; }
 function setSheetApiKey(k){ localStorage.setItem(SHEET_APIKEY_KEY, k); }
 
 let sheetSyncTimer = null;
@@ -1519,14 +1490,7 @@ function buildSheetSyncPayload(){
       themes: STORE.themes || [],
       meetings: STORE.meetings || [],
       messages: STORE.messages || [],
-      users: (STORE.users || []).map(u=>({
-        id: u.id || '',
-        name: u.name || '',
-        username: u.username || '',
-        role: u.role || '',
-        email: u.email || '',
-        isActive: u.isActive !== false
-      }))
+      users: []
     }
   };
 }
@@ -1606,7 +1570,7 @@ async function pullFromSheet(silent){
   try{
     const key = getSheetApiKey();
     const sep = url.includes('?') ? '&' : '?';
-    const res = await fetch(url + sep + 'action=LOAD' + (key?('&apiKey='+encodeURIComponent(key)):''), { method:'GET' });
+    const res = await fetch(url + sep + 'action=pull' + (key?('&key='+encodeURIComponent(key)):''), { method:'GET' });
     if(!res.ok) throw new Error('HTTP '+res.status);
     const json = await res.json();
     const data = json && json.data ? json.data : json;
@@ -1615,6 +1579,7 @@ async function pullFromSheet(silent){
     if(Array.isArray(data.themes)) STORE.themes = data.themes;
     if(Array.isArray(data.meetings)) STORE.meetings = data.meetings;
     if(Array.isArray(data.messages)) STORE.messages = data.messages;
+    if(Array.isArray(data.users)) STORE.users = data.users;
     try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(STORE)); }catch(e){}
     lastPullFailed = false;
     if(mini) mini.textContent = '📊 تم التحميل من قاعدة البيانات';
